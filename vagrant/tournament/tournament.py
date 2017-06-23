@@ -83,6 +83,7 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     db, c = connect()
+    '''
     sql = ("""
     SELECT
         a.id,
@@ -99,6 +100,26 @@ def playerStandings():
         a.id
     order by
         wins
+
+    ;""")
+    '''
+    sql = ("""
+        SELECT
+            a.id,
+            a.fullname,
+            count(b.winner_id) as wins,
+            count(c.id) as total_matches
+        FROM
+            players a
+                left join matches b
+                    on a.id = b.winner_id
+                left join matches c
+                    on a.id = c.loser_id
+                    or a.id = c.winner_id
+        group by
+            a.id
+        order by
+            wins desc
 
     ;""")
     c.execute(sql)
