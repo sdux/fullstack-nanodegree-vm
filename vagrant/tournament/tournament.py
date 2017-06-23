@@ -21,9 +21,6 @@ def deleteMatches():
     c.execute("TRUNCATE matches;")
     db.commit()
 
-    print(' //// Test Remove Scores from Players /////')
-    playerStandings()
-    db.commit()
     db.close()
 
 
@@ -45,7 +42,6 @@ def countPlayers():
     db, c = connect()
     c.execute("select count(*) as num_players from players")
     n_players = c.fetchone()[0]
-    print('Number of players: ', n_players)
     db.close()
     return n_players
 
@@ -126,37 +122,11 @@ def playerStandings():
 
     standings = c.fetchall()
     c.execute(sql)
-    # sql_print(c)
-    print('/// QC Standings ///')
-    for row in standings:
-        print row
-    # print(standings)
+    # print('/// QC Standings ///')
+    # for row in standings:
+    #    print row
     db.close()
     return standings
-
-
-def sql_print(cursor):
-    results = cursor.fetchall()
-
-    widths = []
-    columns = []
-    tavnit = '|'
-    separator = '+'
-
-    for cd in cursor.description:
-        widths.append(max(cd[2], len(cd[0])))
-        columns.append(cd[0])
-
-    for w in widths:
-        tavnit += " %-"+"%ss |" % (w,)
-        separator += '-'*w + '--+'
-
-    print(separator)
-    print(tavnit % tuple(columns))
-    print(separator)
-    for row in results:
-        print(tavnit % row)
-    print(separator)
 
 
 def reportMatch(winner, loser):
@@ -191,7 +161,6 @@ def swissPairings():
         name2: the second player's name
     """
     standings = playerStandings()
-    print('/// QC Swiss Pair ///')
     # standings is sorted by wins descending
     # get every other row starting from zero
     set_a = standings[::2]
